@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  mariadb-dam:
+    image: mariadb:latest
+    container_name: mariadb-dam
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./mariadb-data:/var/lib/mysql #
+
+  php-dam:
+    build: . 
+    container_name: php-dam
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - mariadb-dam
+
+  phpmyadmin-dam:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin-dam
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mariadb-dam
